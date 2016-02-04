@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="-1">
+		<title></title>
+		<script type="text/javascript" src="require_script.js"></script>
+	</head>
+	<body>
+		<h1>Require with timeout</h1>
+		<button id="go">Require script</button>
+		<button id="goWorker">Require script in worker</button>
+	</body>
+	<script>
+		document.querySelector('#go').addEventListener('click', function() {
+			requireScript('example.js', function() {
+				example();
+			});
+		});
+
+		document.querySelector('#goWorker').addEventListener('click', function() {
+			var worker = new Worker('worker.js');
+			worker.onmessage = function(e) {
+				switch (e.data.action) {
+					case 'end':
+						worker.terminate();
+						break;
+				}
+			};
+
+			var message = {
+				action: 'start'
+			};
+			worker.postMessage(message);
+		});
+
+
+	</script>
+</html>
